@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2d6a4f">
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="assets/logo-icon.png">
+  <title>Sevimlilar — QuietSpace Tashkent</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/nav-animations.css">
+  <link rel="stylesheet" href="css/polish.css">
+</head>
+<body data-page="favorites">
+  <div id="navbar"></div>
+
+  <div class="container page-title">
+    <h1>Sevimli joylar</h1>
+  </div>
+
+  <section>
+    <div class="container">
+      <div id="favoritesGrid" class="cards-grid loading">Yuklanmoqda...</div>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+  <script src="js/places-data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/animations.js"></script>
+  <script>
+    if (!requireAuth("favorites.html")) {}
+
+    async function loadFavorites() {
+      const grid = document.getElementById("favoritesGrid");
+      const res = await apiFetch("/favorites/");
+      if (res.offline || !res.ok) {
+        grid.innerHTML = '<div class="empty-state">Backend ulanmagan yoki sevimlilar yo\'q</div>';
+        return;
+      }
+      const items = res.data?.results || res.data || [];
+      if (!items.length) {
+        grid.innerHTML = '<div class="empty-state">Sevimli joylar yo\'q. <a href="places.html">Joy qo\'shing</a></div>';
+        return;
+      }
+      grid.innerHTML = items.map((f) => placeCardHTML(f.place)).join("");
+    }
+    loadFavorites();
+  </script>
+</body>
+</html>

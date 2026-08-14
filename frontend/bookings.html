@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2d6a4f">
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="assets/logo-icon.png">
+  <title>Bookinglarim — QuietSpace Tashkent</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/nav-animations.css">
+  <link rel="stylesheet" href="css/polish.css">
+</head>
+<body data-page="bookings">
+  <div id="navbar"></div>
+
+  <div class="container page-title">
+    <h1>Mening bookinglarim</h1>
+  </div>
+
+  <section>
+    <div class="container">
+      <div id="bookingsList"><div class="loading">Yuklanmoqda...</div></div>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+  <script src="js/places-data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/auth-modal.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/animations.js"></script>
+  <script>
+    if (!requireAuth("bookings.html")) {}
+
+    function renderBookings(bookings) {
+      const el = document.getElementById("bookingsList");
+      if (!bookings.length) {
+        el.innerHTML = '<div class="empty-state">Bookinglar yo\'q. <a href="places.html">Joy toping</a></div>';
+        return;
+      }
+      el.innerHTML = bookings.map((b) => {
+        const place = MOCK_PLACES.find((p) => p.id === b.place);
+        const img = place?.image || getPlaceImageByType(place?.type || "cafe");
+        return `
+        <div class="info-box booking-card" style="margin-bottom:1rem;display:flex;gap:1rem;align-items:center">
+          <div style="width:80px;height:80px;border-radius:10px;overflow:hidden;flex-shrink:0">
+            <img src="${img}" alt="" style="width:100%;height:100%;object-fit:cover">
+          </div>
+          <div style="flex:1">
+            <h3>${b.place_name || place?.name || "Joy"}</h3>
+            <p style="color:var(--muted);font-size:0.9rem">${b.date} · ${b.start_time} — ${b.end_time}</p>
+            <p>O'rindiq: ${b.seat_number} · <span class="tag">${b.status}</span></p>
+          </div>
+          ${b.status !== "cancelled" && !String(b.id).startsWith("demo") ? `<button class="btn btn-ghost btn-sm" onclick="cancelBooking(${b.id})">Bekor qilish</button>` : ""}
+        </div>`;
+      }).join("");
+    }
+
+    async function loadBookings() {
+      const res = await apiFetch("/bookings/my/");
+      if (res.ok) {
+        const bookings = res.data?.results || res.data || [];
+        renderBookings(bookings);
+        return;
+      }
+      const demo = getDemoBookings();
+      if (demo.length) renderBookings(demo);
+      else document.getElementById("bookingsList").innerHTML =
+        '<div class="empty-state">Bookinglar yo\'q. <a href="places.html">Joy toping va bron qiling</a></div>';
+    }
+
+    async function cancelBooking(id) {
+      const res = await apiFetch(`/bookings/${id}/cancel/`, { method: "PATCH" });
+      showToast(res.ok ? "Booking bekor qilindi" : "Xatolik");
+      if (res.ok) loadBookings();
+    }
+
+    loadBookings();
+  </script>
+</body>
+</html>

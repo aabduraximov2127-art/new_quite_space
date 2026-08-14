@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2d6a4f">
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="assets/logo-icon.png">
+  <title>Joy tafsilotlari — QuietSpace Tashkent</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/nav-animations.css">
+  <link rel="stylesheet" href="css/polish.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body data-page="places">
+  <div id="navbar"></div>
+
+  <div class="container place-detail-page" id="placeContent">
+    <div class="loading" style="padding:3rem">Yuklanmoqda...</div>
+  </div>
+
+  <div id="footer"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/places-data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/auth-modal.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/animations.js"></script>
+  <script>
+    const placeId = getUrlParam("id");
+
+    async function loadPlace() {
+      if (!placeId) {
+        document.getElementById("placeContent").innerHTML =
+          '<div class="empty-state">Joy tanlanmagan. <a href="places.html">Joylar ro\'yxatiga qayting</a></div>';
+        return;
+      }
+
+      try {
+        const place = await getPlace(placeId);
+        if (!place) {
+          document.getElementById("placeContent").innerHTML =
+            '<div class="empty-state">Joy topilmadi. <a href="places.html">Boshqa joy qidiring</a></div>';
+          return;
+        }
+
+        document.title = `${place.name} — QuietSpace Tashkent`;
+        document.getElementById("placeContent").innerHTML = buildPlaceDetailHTML(place);
+
+        initPlaceMap(place);
+        showPlaceDistance(place);
+        loadPlaceNearby(place);
+        loadReviews();
+        document.getElementById("reviewForm")?.addEventListener("submit", submitReview);
+
+        document.querySelectorAll(".info-box, .detail-stat-card").forEach((el) => el.classList.add("scale-in"));
+      } catch (err) {
+        console.error(err);
+        document.getElementById("placeContent").innerHTML =
+          '<div class="empty-state">Ma\'lumot yuklanmadi. Sahifani yangilab ko\'ring.</div>';
+      }
+    }
+
+    function initPlaceMap(place) {
+      const lat = Number(place.latitude);
+      const lng = Number(place.longitude);
+      if (Number.isNaN(lat) || Number.isNaN(lng)) return;
+      const map = L.map("placeMap").setView([lat, lng], 15);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap",
+      }).addTo(map);
+      createMapMarker(place, map);
+      setTimeout(() => map.invalidateSize(), 200);
+    }
+
+    async function showPlaceDistance(place) {
+      try {
+        const loc = getStoredUserLocation() || (await requestUserLocation());
+        const dist = haversineKm(loc.lat, loc.lng, Number(place.latitude), Number(place.longitude));
+        const row = document.getElementById("placeDistanceRow");
+        const val = document.getElementById("placeDistanceValue");
+        if (row && val) {
+          val.textContent = formatDistance(dist);
+          row.style.display = "";
+        }
+      } catch {
+        /* joylashuv ruxsati yo'q */
+      }
+    }
+
+    async function loadPlaceNearby(currentPlace) {
+      const el = document.getElementById("placeNearbyList");
+      const status = document.getElementById("placeNearbyStatus");
+      if (!el) return;
+
+      const places = (await getPlaces()).filter((p) => p.id !== Number(currentPlace.id));
+
+      try {
+        const loc = getStoredUserLocation() || (await requestUserLocation());
+        const sorted = sortPlacesByDistance(places, loc.lat, loc.lng);
+        if (status) status.textContent = "Joylashuvingizga eng yaqin joylar";
+        el.innerHTML = sorted.slice(0, 3).map(placeCardHTML).join("");
+      } catch {
+        if (status) status.textContent = "Toshkent markazi bo'yicha tavsiya";
+        el.innerHTML = sortPlacesByDistance(places, 41.3111, 69.2797)
+          .slice(0, 3)
+          .map(placeCardHTML)
+          .join("");
+      }
+    }
+
+    async function loadReviews() {
+      const res = await apiFetch(`/places/${placeId}/reviews/`);
+      const list = document.getElementById("reviewsList");
+      if (!list) return;
+      const reviews = res.data?.results || res.data || [];
+      if (!reviews.length) {
+        list.innerHTML = '<p class="review-empty">Hali sharh yo\'q — birinchi bo\'lib fikr qoldiring!</p>';
+        return;
+      }
+      list.innerHTML = reviews.map((r) => `
+        <div class="review-item">
+          <div class="review-item-head">
+            <strong>${r.user_name || "Foydalanuvchi"}</strong>
+            <span class="rating">Reyting: ${r.rating}/5</span>
+          </div>
+          ${r.wifi_rating ? `<small>Wi-Fi: ${r.wifi_rating}/5 · Shovqin: ${r.noise_rating}/5 · Qulaylik: ${r.comfort_rating}/5</small>` : ""}
+          <p>${r.comment || ""}</p>
+        </div>
+      `).join("");
+    }
+
+    async function submitReview(e) {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const body = Object.fromEntries(fd.entries());
+      Object.keys(body).forEach((k) => { if (k !== "comment") body[k] = Number(body[k]); });
+      const res = await apiFetch(`/places/${placeId}/reviews/`, { method: "POST", body: JSON.stringify(body) });
+      if (res.ok) { showToast("Sharh qo'shildi"); loadReviews(); e.target.reset(); }
+      else showToast("Xatolik: sharh qo'shilmadi");
+    }
+
+    async function toggleFavorite(id) {
+      const res = await apiFetch(`/favorites/${id}/`, { method: "POST" });
+      if (res.ok) {
+        showToast("Sevimlilarga qo'shildi");
+        return;
+      }
+      const added = toggleDemoFavorite(id);
+      showToast(added ? "Sevimlilarga qo'shildi" : "Sevimlilardan olib tashlandi");
+    }
+
+    loadPlace();
+  </script>
+</body>
+</html>

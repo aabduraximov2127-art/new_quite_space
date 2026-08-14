@@ -1,0 +1,172 @@
+/* ===== PROFESSIONAL HEADER — sodda va tushunarli ===== */
+
+.nav-header-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: var(--surface);
+  border-bottom: 2px solid var(--primary-dark);
+  box-shadow: 0 2px 12px rgba(27, 67, 50, 0.08);
+}
+
+.nav-header-wrap.nav-compact {
+  box-shadow: 0 4px 16px rgba(27, 67, 50, 0.1);
+}
+
+/* Kutubxona eslatmasi — juda sokin, bolalar emas */
+.bookshelf-bg {
+  display: none;
+}
+
+.nav-top-strip {
+  background: var(--primary-dark);
+  color: #fff;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 0.45rem 1rem;
+  font-weight: 500;
+}
+
+.nav-top-strip strong {
+  font-weight: 700;
+}
+
+.navbar {
+  position: relative;
+  z-index: 2;
+  background: var(--surface) !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+.navbar-scrolled {
+  background: var(--surface) !important;
+}
+
+.nav-inner {
+  padding: 0.85rem 0;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.logo-text {
+  font-family: var(--font-sans);
+  letter-spacing: 0;
+}
+
+.logo-img {
+  width: 42px;
+  height: 42px;
+  border: 2px solid var(--border);
+  box-shadow: none;
+}
+
+.logo:hover .logo-img {
+  transform: none;
+  box-shadow: none;
+}
+
+.logo-city {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* Menyu — katta, aniq matn */
+.nav-links {
+  gap: 0.25rem;
+}
+
+.nav-links a {
+  padding: 0.55rem 0.85rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text);
+  border-radius: 8px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.nav-links a::after {
+  display: none;
+}
+
+.nav-links a:hover {
+  background: var(--bg);
+  color: var(--primary-dark);
+  transform: none;
+}
+
+.nav-links a.active {
+  background: rgba(45, 106, 79, 0.12);
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+
+.nav-link-icon {
+  display: none;
+}
+
+.nav-user {
+  font-size: 0.95rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.nav-actions .btn {
+  min-height: 44px;
+  font-size: 0.95rem;
+  padding: 0.55rem 1.1rem;
+}
+
+.mobile-toggle {
+  display: none;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.65rem;
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mobile-toggle-bars {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+  box-shadow: 0 -6px 0 currentColor, 0 6px 0 currentColor;
+}
+
+.mobile-toggle-label {
+  font-size: 0.9rem;
+}
+
+@media (max-width: 900px) {
+  .nav-links {
+    background: var(--surface) !important;
+    border: 1px solid var(--border);
+    border-radius: 0 0 10px 10px;
+    padding: 0.5rem;
+  }
+
+  .nav-links a {
+    padding: 0.75rem 1rem;
+    font-size: 1.05rem;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+  }
+
+  .nav-links a:last-child {
+    border-bottom: none;
+  }
+}

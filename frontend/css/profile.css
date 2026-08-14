@@ -1,0 +1,307 @@
+/* ===== SHAXSIY KABINET — professional, tushunarli ===== */
+
+.ig-profile-page {
+  padding: 2rem 0 3rem;
+}
+
+.ig-profile {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.ig-profile-header {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  padding: 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 1.5rem;
+}
+
+.ig-avatar-col {
+  flex-shrink: 0;
+}
+
+.ig-avatar-ring {
+  padding: 0;
+  background: none;
+  animation: none;
+}
+
+.ig-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 3px solid var(--border);
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  font-family: var(--font-sans);
+}
+
+.ig-profile-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.ig-profile-top {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.ig-username {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin: 0;
+}
+
+.ig-verified {
+  display: none;
+}
+
+.ig-profile-actions {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.ig-profile-actions .btn {
+  min-height: 44px;
+  font-size: 0.95rem;
+}
+
+.ig-btn-icon {
+  display: none;
+}
+
+.ig-stats {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.ig-stat {
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.ig-stat strong {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 0.15rem;
+}
+
+.ig-stat-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+}
+
+.ig-stat-btn:hover strong {
+  color: var(--primary);
+}
+
+.ig-bio-name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0.35rem;
+}
+
+.ig-bio-text {
+  font-size: 1rem;
+  line-height: 1.65;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+.ig-bio-link {
+  font-size: 1rem;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.ig-bio-meta {
+  font-size: 0.95rem;
+  color: var(--muted);
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* Highlights o'rniga tezkor havolalar */
+.ig-highlights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.ig-highlight {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+  text-decoration: none;
+  transition: border-color 0.15s, background 0.15s;
+  max-width: none;
+}
+
+.ig-highlight:hover {
+  transform: none;
+  border-color: var(--primary);
+  background: rgba(45, 106, 79, 0.05);
+}
+
+.ig-highlight-ring,
+.ig-highlight-inner {
+  display: none;
+}
+
+.ig-highlight::before {
+  content: none;
+}
+
+/* Tablar — aniq matn */
+.ig-tabs {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.ig-tab {
+  flex: 1;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  border-top: none;
+  border-right: 1px solid var(--border);
+  color: var(--muted);
+  background: var(--bg);
+}
+
+.ig-tab:last-child {
+  border-right: none;
+}
+
+.ig-tab svg {
+  display: none;
+}
+
+.ig-tab.active {
+  background: var(--surface);
+  color: var(--primary-dark);
+  border-bottom: 3px solid var(--primary);
+}
+
+.ig-tab-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  padding: 1.25rem;
+}
+
+.ig-grid {
+  gap: 8px;
+}
+
+.ig-grid-item {
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+.ig-grid-item:hover img {
+  transform: none;
+  filter: none;
+}
+
+.ig-grid-overlay {
+  display: none;
+}
+
+.ig-grid-empty {
+  padding: 2.5rem 1rem;
+  font-size: 1.05rem;
+}
+
+.ig-grid-empty-icon {
+  display: none;
+}
+
+.ig-list-item {
+  padding: 1.15rem 0;
+  font-size: 1rem;
+}
+
+.ig-list-body strong {
+  font-size: 1.05rem;
+}
+
+.ig-list-body span {
+  font-size: 0.95rem;
+}
+
+.ig-list-status {
+  font-size: 0.85rem;
+  padding: 0.35rem 0.75rem;
+}
+
+@media (max-width: 735px) {
+  .ig-profile-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .ig-profile-top,
+  .ig-profile-actions,
+  .ig-stats {
+    justify-content: center;
+  }
+
+  .ig-stat {
+    text-align: center;
+  }
+
+  .ig-bio-meta {
+    align-items: center;
+  }
+
+  .ig-tabs {
+    flex-direction: column;
+  }
+
+  .ig-tab {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+}

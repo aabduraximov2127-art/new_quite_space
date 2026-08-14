@@ -1,0 +1,1059 @@
+QUIETSPACE TASHKENT
+TEXNIK TOPSHIRIQ (TZ)
+Versiya: 2.0
+Sana: 14.08.2026
+
+==================================================
+1. LOYIHA NOMI
+==================================================
+
+QuietSpace Tashkent
+
+==================================================
+2. LOYIHA MAQSADI
+==================================================
+
+QuietSpace Tashkent — Toshkent shahrida masofadan ishlaydiganlar,
+freelancerlar va talabalar uchun tinch, qulay va ishlashga mos
+joylarni topish, solishtirish, AI yordamida tavsiya olish va
+kerak bo'lganda joyni bron qilish imkonini beruvchi web-platforma.
+
+Platformada foydalanuvchi:
+- Kafelar, kutubxonalar, coworkinglar va bepul ish zonalarini topadi.
+- Xarita orqali joylarni ko'radi.
+- Wi-Fi tezligi, shovqin darajasi, rozetkalar va narxlarni solishtiradi.
+- Hozirgi bo'sh joylar sonini ko'radi.
+- AI yordamida o'ziga mos joylarni topadi.
+- Joy haqida batafsil ma'lumot va reviewlarni ko'radi.
+- Kerak bo'lganda joyni bron qiladi.
+- Booking qilish uchungina ro'yxatdan o'tadi yoki login qiladi.
+
+==================================================
+3. MUHIM FOYDALANUVCHI QOIDASI
+==================================================
+
+REGISTRATION SAYTDAN ODDIY FOYDALANISH UCHUN MAJBURIY EMAS.
+
+Guest foydalanuvchi:
+- Home
+- Places
+- Search
+- Filter
+- Map
+- Place Details
+- AI Assistant
+
+funksiyalaridan login qilmasdan foydalanishi mumkin.
+
+Authentication talab qilinadigan funksiyalar:
+- Booking
+- Review yozish
+- Favorite saqlash
+- Joy qo'shish
+- Profil
+
+Booking tugmasi bosilganda login qilinmagan foydalanuvchi
+Login/Register sahifasiga yuboriladi.
+
+==================================================
+4. FOYDALANUVCHI ROLLARI
+==================================================
+
+4.1. Guest
+
+Ro'yxatdan o'tmagan foydalanuvchi.
+
+Huquqlari:
+- Joylarni ko'rish
+- Qidirish
+- Filtrlash
+- Xarita bilan ishlash
+- Place Details ko'rish
+- AI Assistantdan foydalanish
+
+4.2. User
+
+Ro'yxatdan o'tgan foydalanuvchi.
+
+Huquqlari:
+- Booking qilish
+- Bookinglarni ko'rish
+- Bookingni bekor qilish
+- Review yozish
+- Reyting berish
+- Favorite joylarni saqlash
+- Joy qo'shish
+- Profilni boshqarish
+
+4.3. Admin
+
+Platformani boshqaruvchi foydalanuvchi.
+
+Huquqlari:
+- Userlarni boshqarish
+- Joylarni tasdiqlash, tahrirlash va o'chirish
+- Reviewlarni moderatsiya qilish
+- Bookinglarni nazorat qilish
+- Statistikalarni ko'rish
+
+==================================================
+5. TEXNOLOGIK STACK
+==================================================
+
+FRONTEND:
+- HTML5
+- CSS3
+- JavaScript
+- Responsive Design
+
+BACKEND:
+- Python
+- Django
+- Django REST Framework (DRF)
+- Django ORM
+- SimpleJWT / JWT Authentication
+- django-cors-headers
+- django-filter
+
+DATABASE:
+- PostgreSQL
+
+AI:
+- AI API
+- AI bilan ishlash Django REST API orqali amalga oshiriladi.
+- AI API key faqat backend serverda saqlanadi.
+
+MAP:
+- OpenStreetMap yoki boshqa Map API
+
+MEDIA:
+- Joy rasmlari uchun Django Media Storage
+- Productionda Cloudinary yoki S3 kabi storage ishlatilishi mumkin.
+
+==================================================
+6. LOYIHA ARXITEKTURASI
+==================================================
+
+                     QUIETSPACE TASHKENT
+                              |
+             +----------------+----------------+
+             |                                 |
+          FRONTEND                          BACKEND
+             |                                 |
+      HTML / CSS / JS                    Django + DRF
+             |                                 |
+             |                         +-------+-------+
+             |                         |               |
+             |                    REST API          AI SERVICE
+             |                         |
+             |                    Django ORM
+             |                         |
+             |                    PostgreSQL
+             |
+             +------------------- API ----------------+
+
+External:
+- Map API
+- AI API
+- Media Storage
+
+BACKEND ARXITEKTURASI:
+
+Django Project
+|
++-- apps/
+|   +-- accounts
+|   +-- places
+|   +-- reviews
+|   +-- bookings
+|   +-- favorites
+|   +-- ai_assistant
+|   +-- availability
+|   +-- notifications
+|   +-- common
+|
++-- config/
+|   +-- settings.py
+|   +-- urls.py
+|   +-- asgi.py
+|   +-- wsgi.py
+|
++-- manage.py
+
+Har bir app o'zining:
+- models.py
+- serializers.py
+- views.py
+- urls.py
+- permissions.py
+- admin.py
+- tests.py
+
+fayllariga ega bo'lishi mumkin.
+
+==================================================
+7. FRONTEND SAHIFALARI
+==================================================
+
+- Home
+- Places
+- Map
+- Place Details
+- Login
+- Register
+- Profile
+- Favorites
+- My Bookings
+- Booking
+- AI Assistant
+- Add Place
+- Admin
+
+==================================================
+8. HOME PAGE
+==================================================
+
+Bosh sahifada:
+- QuietSpace Tashkent logo
+- Navigation
+- Search
+- AI Assistant
+- Popular Places
+- Nearby Places
+- Recommended Places
+- Map preview
+- Login/Register tugmalari
+
+Asosiy CTA:
+"Find a quiet place to work"
+
+Search misoli:
+"Yunusobodda tinch va Wi-Fi tez joy topish"
+
+==================================================
+9. PLACES PAGE
+==================================================
+
+Barcha joylar card ko'rinishida ko'rsatiladi.
+
+Har bir card:
+- Rasm
+- Joy nomi
+- Joy turi
+- Rating
+- Manzil
+- Wi-Fi tezligi
+- Shovqin darajasi
+- Rozetka mavjudligi
+- Narx
+- Bo'sh joylar
+- View Details
+- Book Now
+
+==================================================
+10. SEARCH VA FILTER
+==================================================
+
+Search:
+- Joy nomi
+- Tuman
+- Manzil
+
+Filter:
+- Cafe
+- Library
+- Coworking
+- Free Zone
+- Bepul
+- Narx
+- Wi-Fi tezligi
+- Shovqin darajasi
+- Rozetka
+- Bo'sh joy
+
+Misol:
+Yunusobod + Wi-Fi 50 Mbps+ + Tinch + Rozetka
+
+DRF backendda filterlar django-filter orqali ishlatiladi.
+
+==================================================
+11. MAP
+==================================================
+
+Toshkent xaritasida joylar markerlar orqali ko'rsatiladi.
+
+Har bir Place:
+- latitude
+- longitude
+
+ma'lumotlariga ega bo'ladi.
+
+Marker bosilganda:
+- Place name
+- Rating
+- Noise level
+- Wi-Fi
+- Available seats
+- Price
+- View Details
+
+==================================================
+12. PLACE DETAILS
+==================================================
+
+Joyning to'liq sahifasi:
+
+- Rasm gallery
+- Joy nomi
+- Tavsif
+- Reyting
+- Manzil
+- Ish vaqti
+- Wi-Fi tezligi
+- Shovqin darajasi
+- Rozetkalar
+- Umumiy sig'im
+- Hozirgi bo'sh joylar
+- Narx
+- Qulayliklar
+- Xarita
+- Reviewlar
+
+Tugmalar:
+- Book Now
+- Add to Favorites
+- Write Review
+
+==================================================
+13. AI ASSISTANT
+==================================================
+
+Platformada AI Assistant bo'ladi.
+
+AI foydalanuvchining tabiiy tildagi talablarini tushunadi.
+
+User misoli:
+"Men 3 soat ishlamoqchiman. Tinch, Wi-Fi tez,
+rozetkasi bor va 30 000 so'mdan oshmaydigan joy kerak."
+
+AI:
+1. Talablarni ajratadi.
+2. Backendga mos parametrlarni yuboradi.
+3. PostgreSQL database'dagi joylarni qidiradi.
+4. Mos joylarni saralaydi.
+5. Foydalanuvchiga tavsiya qiladi.
+
+AI tavsiyasida:
+- Place name
+- Rating
+- Wi-Fi
+- Noise
+- Price
+- Available seats
+- Nima uchun mosligi
+
+ko'rsatiladi.
+
+MUHIM:
+AI mavjud bo'lmagan joy yoki ma'lumotni o'ylab topmasligi kerak.
+Tavsiyalar backend orqali mavjud database ma'lumotlariga
+asoslanishi kerak.
+
+AI API key frontendda saqlanmaydi.
+
+==================================================
+14. DJANGO REST FRAMEWORK API
+==================================================
+
+API format:
+JSON
+
+Base URL:
+ /api/
+
+AUTH:
+
+POST /api/auth/register/
+POST /api/auth/login/
+POST /api/auth/refresh/
+GET  /api/auth/me/
+
+PLACES:
+
+GET    /api/places/
+GET    /api/places/<id>/
+POST   /api/places/
+PATCH  /api/places/<id>/
+DELETE /api/places/<id>/
+
+REVIEWS:
+
+GET    /api/places/<id>/reviews/
+POST   /api/places/<id>/reviews/
+PATCH  /api/reviews/<id>/
+DELETE /api/reviews/<id>/
+
+BOOKINGS:
+
+POST   /api/bookings/
+GET    /api/bookings/my/
+GET    /api/bookings/<id>/
+PATCH  /api/bookings/<id>/cancel/
+
+FAVORITES:
+
+GET    /api/favorites/
+POST   /api/favorites/<place_id>/
+DELETE /api/favorites/<place_id>/
+
+AVAILABILITY:
+
+GET /api/places/<id>/availability/
+
+AI:
+
+POST /api/ai/recommend/
+
+ADMIN:
+Admin uchun Django Admin va kerak bo'lsa alohida admin API ishlatiladi.
+
+==================================================
+15. AUTHENTICATION
+==================================================
+
+Django REST Framework + JWT ishlatiladi.
+
+Guest:
+- Public API endpointlardan foydalanadi.
+
+User:
+- JWT access token orqali himoyalangan endpointlardan foydalanadi.
+
+Registration:
+- Email
+- Password
+- Name
+
+Login:
+- Email
+- Password
+
+JWT:
+- Access Token
+- Refresh Token
+
+Booking bosilganda:
+1. Frontend user authentication holatini tekshiradi.
+2. Login qilinmagan bo'lsa Login/Register sahifasiga yuboradi.
+3. Login/Registerdan keyin booking sahifasiga qaytaradi.
+
+==================================================
+16. BOOKING
+==================================================
+
+Booking faqat authenticated User uchun.
+
+Booking jarayoni:
+
+Place Details
+    |
+    v
+Book Now
+    |
+    v
+Login/Register
+    |
+    v
+Date & Time
+    |
+    v
+Available Seat
+    |
+    v
+Confirm Booking
+    |
+    v
+Booking Created
+
+Booking ma'lumotlari:
+- User
+- Place
+- Date
+- Start time
+- End time
+- Seat
+- Status
+- Created date
+
+Status:
+- pending
+- confirmed
+- cancelled
+- completed
+
+Backend booking vaqtida:
+- Joy mavjudligini tekshiradi.
+- Vaqt oralig'ini tekshiradi.
+- Seat mavjudligini tekshiradi.
+- Bir xil seatga bir vaqtning o'zida ikki booking tushishining oldini oladi.
+
+==================================================
+17. AVAILABILITY
+==================================================
+
+Har bir joyda mavjud bo'sh joylar ko'rsatiladi.
+
+Misol:
+Total seats: 30
+Occupied: 18
+Available: 12
+
+Status:
+- available
+- busy
+- full
+
+Backend availability ma'lumotlarini bookinglar bilan
+sinxronlashtiradi.
+
+UI:
+Green = bo'sh
+Yellow = kam joy
+Red = joy yo'q
+
+==================================================
+18. REVIEW VA RATING
+==================================================
+
+Review yozish uchun authentication kerak.
+
+Review:
+- Overall rating: 1-5
+- Wi-Fi rating: 1-5
+- Noise rating: 1-5
+- Comfort rating: 1-5
+- Comment
+- Created date
+
+Review joyning umumiy reytingiga ta'sir qiladi.
+
+Backend:
+- User faqat o'z reviewini tahrirlashi mumkin.
+- Admin reviewni moderatsiya qila oladi.
+
+==================================================
+19. FAVORITES
+==================================================
+
+Login qilgan User joylarni favorite qiladi.
+
+Favorite:
+- User
+- Place
+- Created date
+
+Endpoint:
+GET /api/favorites/
+POST /api/favorites/<place_id>/
+DELETE /api/favorites/<place_id>/
+
+==================================================
+20. ADD PLACE
+==================================================
+
+Login qilgan User yangi joy taklif qilishi mumkin.
+
+Form:
+- Place name
+- Description
+- Type
+- Address
+- Latitude
+- Longitude
+- Images
+- Price
+- Wi-Fi speed
+- Noise level
+- Sockets
+- Capacity
+- Working hours
+- Amenities
+
+Yangi joy:
+Pending -> Admin review -> Approved
+
+Guest joy qo'sha olmaydi.
+
+==================================================
+21. DATABASE MODELS
+==================================================
+
+21.1. User
+
+Django custom User model ishlatish tavsiya qilinadi.
+
+Fields:
+- id
+- name
+- email
+- password
+- avatar
+- role
+- is_active
+- is_staff
+- created_at
+- updated_at
+
+Role:
+- user
+- admin
+
+21.2. Place
+
+Fields:
+- id
+- name
+- description
+- type
+- address
+- district
+- latitude
+- longitude
+- images
+- price
+- working_hours
+- wifi_speed
+- noise_level
+- sockets
+- capacity
+- available_seats
+- rating
+- amenities
+- created_by
+- is_approved
+- created_at
+- updated_at
+
+Type:
+- cafe
+- library
+- coworking
+- free_zone
+
+21.3. Review
+
+Fields:
+- id
+- user
+- place
+- rating
+- wifi_rating
+- noise_rating
+- comfort_rating
+- comment
+- created_at
+- updated_at
+
+21.4. Availability
+
+Fields:
+- id
+- place
+- total_seats
+- available_seats
+- occupied_seats
+- status
+- updated_at
+
+21.5. Booking
+
+Fields:
+- id
+- user
+- place
+- date
+- start_time
+- end_time
+- seat_number
+- status
+- created_at
+- updated_at
+
+21.6. Favorite
+
+Fields:
+- id
+- user
+- place
+- created_at
+
+==================================================
+22. DJANGO APPS
+==================================================
+
+Backend quyidagicha bo'linadi:
+
+backend/
+|
++-- config/
+|
++-- apps/
+|   |
+|   +-- accounts/
+|   |   +-- models.py
+|   |   +-- serializers.py
+|   |   +-- views.py
+|   |   +-- urls.py
+|   |   +-- permissions.py
+|   |
+|   +-- places/
+|   |
+|   +-- reviews/
+|   |
+|   +-- bookings/
+|   |
+|   +-- favorites/
+|   |
+|   +-- availability/
+|   |
+|   +-- ai_assistant/
+|   |
+|   +-- notifications/
+|   |
+|   +-- common/
+|
++-- manage.py
++-- requirements.txt
++.env
+
+Har bir app imkon qadar o'z mas'uliyatiga ega bo'ladi.
+
+==================================================
+23. DJANGO BACKEND PAPKA STRUKTURASI
+==================================================
+
+quietspace-backend/
+|
++-- manage.py
+|
++-- config/
+|   +-- __init__.py
+|   +-- settings.py
+|   +-- urls.py
+|   +-- asgi.py
+|   +-- wsgi.py
+|
++-- apps/
+|   +-- accounts/
+|   +-- places/
+|   +-- reviews/
+|   +-- bookings/
+|   +-- favorites/
+|   +-- availability/
+|   +-- ai_assistant/
+|   +-- notifications/
+|   +-- common/
+|
++-- media/
++-- static/
++-- requirements.txt
++-- .env
++-- README.md
+
+==================================================
+24. DJANGO REST FRAMEWORK QOIDALARI
+==================================================
+
+- API JSON formatda ishlaydi.
+- Serializers orqali validation qilinadi.
+- ViewSet yoki APIView ishlatilishi mumkin.
+- Routerlar orqali URLlar boshqariladi.
+- Permissions orqali access nazorat qilinadi.
+- django-filter orqali filtering qilinadi.
+- Pagination qo'llaniladi.
+- Search va ordering qo'llaniladi.
+- Error response bir xil formatda qaytariladi.
+
+==================================================
+25. SECURITY
+==================================================
+
+- Passwordlar Django password hashing orqali saqlanadi.
+- JWT authentication ishlatiladi.
+- CORS sozlanadi.
+- API permissions qo'llaniladi.
+- Admin endpointlar himoyalanadi.
+- User faqat o'z bookinglarini boshqaradi.
+- User faqat o'z reviewini tahrirlaydi.
+- Input validation qilinadi.
+- Sensitive ma'lumotlar .env faylda saqlanadi.
+- AI API key frontendga chiqarilmaydi.
+- Productionda DEBUG=False.
+- Productionda HTTPS ishlatiladi.
+
+==================================================
+26. SEARCH, FILTER VA SORTING API
+==================================================
+
+Misol:
+
+GET /api/places/?district=yunusobod
+GET /api/places/?type=cafe
+GET /api/places/?noise_level=quiet
+GET /api/places/?min_wifi=50
+GET /api/places/?has_sockets=true
+GET /api/places/?available=true
+GET /api/places/?ordering=-rating
+
+Bir nechta filter birga ishlashi kerak.
+
+==================================================
+27. ADMIN PANEL
+==================================================
+
+Django Admin orqali:
+- Users
+- Places
+- Reviews
+- Bookings
+- Favorites
+- Availability
+
+boshqariladi.
+
+Admin:
+- Place approve/reject
+- User block/unblock
+- Review delete/moderation
+- Booking ko'rish
+- Statistik ma'lumotlarni ko'rish
+
+==================================================
+28. NOTIFICATIONS
+==================================================
+
+Keyingi bosqichda:
+- Booking confirmed
+- Booking cancelled
+- Booking reminder
+- Place approved
+
+notificationlari qo'shilishi mumkin.
+
+Boshlang'ich MVP uchun notification majburiy emas.
+
+==================================================
+29. PROJECT FOLDER STRUCTURE
+==================================================
+
+quietspace/
+|
++-- frontend/
+|   +-- index.html
+|   +-- places.html
+|   +-- map.html
+|   +-- place.html
+|   +-- login.html
+|   +-- register.html
+|   +-- profile.html
+|   +-- favorites.html
+|   +-- bookings.html
+|   +-- booking.html
+|   +-- css/
+|   +-- js/
+|   +-- assets/
+|
++-- backend/
+|   +-- manage.py
+|   +-- config/
+|   +-- apps/
+|   |   +-- accounts/
+|   |   +-- places/
+|   |   +-- reviews/
+|   |   +-- bookings/
+|   |   +-- favorites/
+|   |   +-- availability/
+|   |   +-- ai_assistant/
+|   |   +-- notifications/
+|   |   +-- common/
+|   +-- media/
+|   +-- static/
+|   +-- requirements.txt
+|   +-- .env
+|   +-- README.md
+|
++-- README.md
+
+==================================================
+30. MVP BOSQICHLARI
+==================================================
+
+1-BOSQICH:
+- Frontend layout
+- Home
+- Places
+- Search
+- Filter
+- Place Details
+- Map
+- Responsive Design
+
+2-BOSQICH:
+- Django project
+- PostgreSQL
+- DRF
+- Custom User
+- Places API
+- Authentication API
+- JWT
+
+3-BOSQICH:
+- Review
+- Rating
+- Favorites
+- Availability
+
+4-BOSQICH:
+- Booking
+- Date/time
+- Seat selection
+- Booking history
+- Booking cancellation
+
+5-BOSQICH:
+- AI Assistant
+- AI recommendations
+- Database asosida recommendation
+
+6-BOSQICH:
+- Django Admin
+- Moderation
+- Statistics
+- Notifications
+
+==================================================
+31. ASOSIY USER FLOW
+==================================================
+
+GUEST:
+
+Website
+  ->
+Search
+  ->
+Filter
+  ->
+Map / Places
+  ->
+Place Details
+  ->
+AI Recommendation
+  ->
+Book Now
+  ->
+Login/Register
+  ->
+Date & Time
+  ->
+Available Seat
+  ->
+Confirm
+  ->
+Booking
+
+REGISTERED USER:
+
+Login
+  ->
+Profile
+  ->
+Favorites
+  ->
+Bookings
+  ->
+Reviews
+
+==================================================
+32. API VA FRONTEND ALOQASI
+==================================================
+
+Frontend Django REST API bilan HTTP/HTTPS orqali aloqa qiladi.
+
+Misol:
+
+Frontend:
+GET /api/places/
+
+Backend:
+Django REST Framework
+
+Database:
+PostgreSQL
+
+Response:
+JSON
+
+Frontend JSON ma'lumotni olib UI'da ko'rsatadi.
+
+==================================================
+33. YAKUNIY NATIJA
+==================================================
+
+QuietSpace Tashkent yakuniy holatda Toshkentdagi tinch ishlash
+joylarini topish, taqqoslash, xaritada ko'rish, AI yordamida
+mos joyni tanlash va kerak bo'lganda joyni bron qilish imkonini
+beradigan zamonaviy web-platforma bo'ladi.
+
+ENG MUHIM TALAB:
+
+Foydalanuvchi saytga kirganda registration bilan majburan
+to'xtatilmasligi kerak.
+
+Guest:
+- saytni bemalol ko'radi;
+- qidiradi;
+- filter ishlatadi;
+- xaritadan foydalanadi;
+- joylarni ko'radi;
+- AI Assistantdan foydalanadi.
+
+Authentication faqat:
+- Booking
+- Review
+- Favorite
+- Add Place
+- Profile
+
+uchun talab qilinadi.
+
+Backend:
+Python + Django + Django REST Framework + PostgreSQL.
+
+Frontend:
+HTML + CSS + JavaScript.
+
+AI:
+Backend orqali AI API bilan integratsiya qilinadi.
+
+==================================================
+34. QABUL QILISH MEZONLARI
+==================================================
+
+Loyiha quyidagi shartlarga javob berishi kerak:
+
+1. Guest registration qilmasdan joylarni ko'ra olishi.
+2. Search va filter ishlashi.
+3. Map ishlashi.
+4. Place Details ishlashi.
+5. AI mavjud joylardan tavsiya berishi.
+6. Booking uchun authentication talab qilinishi.
+7. Booking vaqtida available seat tekshirilishi.
+8. User review va rating qoldira olishi.
+9. Favorite ishlashi.
+10. Admin joylarni tasdiqlay olishi.
+11. Backend Django REST Frameworkda yozilishi.
+12. Database PostgreSQL bo'lishi.
+13. API JSON formatda ishlashi.
+14. JWT authentication ishlashi.
+15. Responsive frontend bo'lishi.
+16. API va database xavfsizligi ta'minlanishi.

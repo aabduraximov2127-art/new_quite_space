@@ -1,0 +1,132 @@
+/* ===== ANIMATSIYALAR — minimal, professional ===== */
+
+body {
+  opacity: 1;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0.6; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up {
+  animation: fadeUp 0.35s ease forwards;
+}
+
+@keyframes scaleIn {
+  from { opacity: 0.85; }
+  to { opacity: 1; }
+}
+
+.scale-in {
+  animation: scaleIn 0.25s ease forwards;
+}
+
+.scroll-reveal {
+  opacity: 1;
+  transform: none;
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+}
+
+/* Navbar */
+.navbar {
+  transition: box-shadow 0.2s;
+}
+
+/* Buttons — faqat focus */
+.btn:active {
+  transform: none !important;
+}
+
+.btn-loading { pointer-events: none; opacity: 0.85; }
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.shake { animation: shake 0.35s ease; }
+
+@keyframes successPop {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.success-pop { animation: successPop 0.35s ease; }
+
+.place-card {
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.place-card-image img {
+  transition: none;
+}
+
+.modal-overlay {
+  transition: opacity 0.2s ease, visibility 0.2s;
+}
+
+.modal-card {
+  transition: transform 0.25s ease, opacity 0.2s;
+}
+
+.modal-overlay:not(.open) .modal-card {
+  transform: translateY(12px);
+  opacity: 0;
+}
+
+.modal-overlay.open .modal-card {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.toast {
+  animation: toastIn 0.3s ease;
+}
+
+@keyframes toastIn {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.loading {
+  background: var(--bg);
+  animation: none;
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.15);
+}
+
+.btn-pulse {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

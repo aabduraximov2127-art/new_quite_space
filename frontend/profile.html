@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2d6a4f">
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="assets/logo-icon.png">
+  <title>Shaxsiy kabinet — QuietSpace Tashkent</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/nav-animations.css">
+  <link rel="stylesheet" href="css/polish.css">
+  <link rel="stylesheet" href="css/profile.css">
+</head>
+<body data-page="profile">
+  <div id="navbar"></div>
+
+  <main class="container ig-profile-page" id="profilePage">
+    <div class="loading" style="padding:3rem;text-align:center">Profil yuklanmoqda...</div>
+  </main>
+
+  <div id="footer"></div>
+
+  <script src="js/places-data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/auth-modal.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/animations.js"></script>
+  <script>
+    if (!requireAuth("profile")) {}
+
+    let profileData = { user: null, bookings: [], favorites: [], places: [] };
+
+    async function loadProfile() {
+      const res = await apiFetch("/auth/me/");
+      const user = res.ok ? res.data : getUser();
+      if (!user) {
+        document.getElementById("profilePage").innerHTML =
+          '<div class="empty-state">Profil yuklanmadi. <a href="login.html">Kirish</a></div>';
+        return;
+      }
+
+      const [bookings, favorites] = await Promise.all([getProfileBookings(), getProfileFavorites()]);
+      const placeIds = new Set([
+        ...bookings.map((b) => b.place || MOCK_PLACES.find((p) => p.name === b.place_name)?.id),
+        ...favorites.map((p) => p.id),
+      ].filter(Boolean));
+
+      const places = [...placeIds]
+        .map((id) => MOCK_PLACES.find((p) => p.id === Number(id)))
+        .filter(Boolean);
+
+      profileData = { user, bookings, favorites, places };
+      renderProfile();
+    }
+
+    function renderProfile() {
+      const { user, bookings, favorites, places } = profileData;
+      const handle = getUserHandle(user);
+      const initials = getUserInitials(user.name);
+      const bio = user.bio || "Toshkentda tinch va qulay ish joyi qidiraman.";
+      const memberSince = formatMemberSince(user.created_at);
+
+      document.getElementById("profilePage").innerHTML = `
+        <article class="ig-profile">
+          <header class="ig-profile-header">
+            <div class="ig-avatar-col">
+              <div class="ig-avatar-ring">
+                <div class="ig-avatar" id="profileAvatar">${initials}</div>
+              </div>
+            </div>
+            <div class="ig-profile-info">
+              <div class="ig-profile-top">
+                <h1 class="ig-username">${user.name}</h1>
+                <div class="ig-profile-actions">
+                  <button type="button" class="btn btn-outline" onclick="openEditProfile()">Ma'lumotlarni tahrirlash</button>
+                  <a href="places" class="btn btn-primary">Yangi bron</a>
+                  <button type="button" class="btn btn-ghost" onclick="logout()">Chiqish</button>
+                </div>
+              </div>
+              <div class="ig-stats">
+                <button type="button" class="ig-stat ig-stat-btn" onclick="switchTab('grid')">
+                  <strong>${places.length}</strong>
+                  Tashrif joylar
+                </button>
+                <button type="button" class="ig-stat ig-stat-btn" onclick="switchTab('bookings')">
+                  <strong>${bookings.length}</strong>
+                  Faol bronlar
+                </button>
+                <button type="button" class="ig-stat ig-stat-btn" onclick="switchTab('saved')">
+                  <strong>${favorites.length}</strong>
+                  Sevimli joylar
+                </button>
+              </div>
+              <div class="ig-bio">
+                <p class="ig-bio-text">${bio}</p>
+                <a href="mailto:${user.email}" class="ig-bio-link">Email: ${user.email}</a>
+                <div class="ig-bio-meta">
+                  <span>Manzil: Toshkent shahri</span>
+                  <span>A'zo bo'lgan sana: ${memberSince}</span>
+                  <span>Login: ${handle}</span>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <div class="ig-highlights">
+            <a href="bookings" class="ig-highlight">Mening bronlarim</a>
+            <a href="favorites" class="ig-highlight">Sevimli joylar</a>
+            <a href="places" class="ig-highlight">Joylar ro'yxati</a>
+            <a href="map" class="ig-highlight">Xarita</a>
+            <a href="index.html#ai" class="ig-highlight">Yordamchi xizmat</a>
+          </div>
+
+          <nav class="ig-tabs" role="tablist">
+            <button type="button" class="ig-tab active" data-tab="grid" onclick="switchTab('grid')">Tashrif buyurilgan joylar</button>
+            <button type="button" class="ig-tab" data-tab="bookings" onclick="switchTab('bookings')">Bronlar tarixi</button>
+            <button type="button" class="ig-tab" data-tab="saved" onclick="switchTab('saved')">Saqlangan joylar</button>
+          </nav>
+
+          <div class="ig-tab-panel active" id="panel-grid">${renderGrid(places)}</div>
+          <div class="ig-tab-panel" id="panel-bookings">${renderBookingsList(bookings)}</div>
+          <div class="ig-tab-panel" id="panel-saved">${renderSavedGrid(favorites)}</div>
+        </article>`;
+    }
+
+    function renderGrid(places) {
+      if (!places.length) {
+        return `<div class="ig-grid-empty">
+          <p><strong>Hozircha joylar yo'q</strong></p>
+          <p class="help-text" style="margin-top:0.5rem">Avval joy tanlang va bron qiling yoki sevimliga qo'shing.</p>
+          <a href="places" class="btn btn-primary" style="margin-top:1rem">Joylar ro'yxati</a>
+        </div>`;
+      }
+      return `<div class="ig-grid">${places.map(placeGridItem).join("")}</div>`;
+    }
+
+    function placeGridItem(p) {
+      const img = p.image || getPlaceImageByType(p.type);
+      return `<a href="place?id=${p.id}" class="ig-grid-item" title="${p.name}">
+        <img src="${img}" alt="${p.name}" loading="lazy">
+      </a>`;
+    }
+
+    function renderBookingsList(bookings) {
+      if (!bookings.length) {
+        return `<div class="ig-grid-empty">
+          <p><strong>Bronlar yo'q</strong></p>
+          <p class="help-text" style="margin-top:0.5rem">Joy tanlang va vaqt belgilab bron qiling.</p>
+          <a href="places" class="btn btn-outline btn-sm" style="margin-top:1rem">Joy qidirish</a>
+        </div>`;
+      }
+      return `<div class="ig-list">${bookings.map((b) => {
+        const place = MOCK_PLACES.find((p) => p.id === Number(b.place)) ||
+          MOCK_PLACES.find((p) => p.name === b.place_name);
+        const img = place?.image || getPlaceImageByType(place?.type || "cafe");
+        const status = b.status || "confirmed";
+        const statusLabel = status === "cancelled" ? "Bekor" : "Tasdiqlangan";
+        return `<a href="${place ? `place?id=${place.id}` : "bookings"}" class="ig-list-item">
+          <div class="ig-list-thumb"><img src="${img}" alt=""></div>
+          <div class="ig-list-body">
+            <strong>${b.place_name || place?.name || "Joy"}</strong>
+            <span>${b.date} · ${b.start_time} — ${b.end_time} · O'rindiq №${b.seat_number || 1}</span>
+          </div>
+          <span class="ig-list-status ${status === "cancelled" ? "cancelled" : ""}">${statusLabel}</span>
+        </a>`;
+      }).join("")}</div>`;
+    }
+
+    function renderSavedGrid(favorites) {
+      if (!favorites.length) {
+        return `<div class="ig-grid-empty">
+          <p><strong>Saqlangan joylar yo'q</strong></p>
+          <p class="help-text" style="margin-top:0.5rem">Joy sahifasida «Sevimlilarga qo'shish» tugmasini bosing.</p>
+          <a href="places" class="btn btn-outline btn-sm" style="margin-top:1rem">Joylar ro'yxati</a>
+        </div>`;
+      }
+      return `<div class="ig-grid">${favorites.map(placeGridItem).join("")}</div>`;
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll(".ig-tab").forEach((t) => {
+        t.classList.toggle("active", t.dataset.tab === tab);
+      });
+      document.querySelectorAll(".ig-tab-panel").forEach((p) => {
+        p.classList.toggle("active", p.id === `panel-${tab}`);
+      });
+    }
+
+    function openEditProfile() {
+      const user = profileData.user;
+      const modal = document.createElement("div");
+      modal.className = "modal-overlay open ig-edit-modal";
+      modal.innerHTML = `
+        <div class="modal-card" style="max-width:420px">
+          <button type="button" class="modal-close" onclick="this.closest('.modal-overlay').remove()">×</button>
+          <h2 style="margin-bottom:1rem;font-family:var(--font-serif)">Profilni tahrirlash</h2>
+          <form id="editProfileForm">
+            <div class="form-group">
+              <label>Ism</label>
+              <input class="form-input" type="text" name="name" value="${user.name || ""}" required>
+            </div>
+            <div class="form-group">
+              <label>Bio</label>
+              <textarea class="form-input" name="bio" rows="3" placeholder="O'zingiz haqingizda...">${user.bio || ""}</textarea>
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input class="form-input" type="email" value="${user.email}" disabled style="opacity:0.7">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%">Saqlash</button>
+          </form>
+        </div>`;
+      document.body.appendChild(modal);
+      modal.addEventListener("click", (e) => { if (e.target === modal) modal.remove(); });
+      modal.querySelector("#editProfileForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        updateLocalUser({ name: fd.get("name"), bio: fd.get("bio") });
+        profileData.user = getUser();
+        modal.remove();
+        showToast("Profil yangilandi");
+        renderProfile();
+        initLayout("profile");
+      });
+    }
+
+    loadProfile();
+  </script>
+</body>
+</html>

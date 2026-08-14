@@ -1,0 +1,20 @@
+# Python / Django
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+backend/.env
+db.sqlite3
+media/
+staticfiles/
+
+# Secrets / local config
+.env
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Frontend secrets (API key in ai-gemini.js)
+frontend/js/ai-gemini.js

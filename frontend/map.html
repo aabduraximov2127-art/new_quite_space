@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2d6a4f">
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="assets/logo-icon.png">
+  <title>Xarita — QuietSpace Tashkent</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/nav-animations.css">
+  <link rel="stylesheet" href="css/polish.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    .map-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      background: var(--bg);
+      border-radius: 10px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 0.35rem; font-size: 0.85rem; }
+    .legend-dot { width: 14px; height: 14px; border-radius: 50%; }
+    .map-filter { margin-bottom: 0.75rem; width: 100%; }
+    .custom-marker { background: transparent !important; border: none !important; }
+    .map-type-label {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--primary);
+      margin-right: 0.25rem;
+    }
+  </style>
+</head>
+<body data-page="map">
+  <div id="navbar"></div>
+
+  <div class="container page-title">
+    <h1>Toshkent xaritasi</h1>
+    <p style="color:var(--muted)">Haqiqiy kafe, kutubxona va coworking joylar — 12 ta joy xaritada</p>
+  </div>
+
+  <section>
+    <div class="container map-layout">
+      <div class="map-sidebar">
+        <div class="map-legend">
+          <div class="legend-item"><span class="legend-dot" style="background:#e76f51"></span> Kafe</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#457b9d"></span> Kutubxona</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#7209b7"></span> Coworking</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#2d6a4f"></span> Bepul zona</div>
+        </div>
+        <select class="form-input map-filter" id="typeFilter">
+          <option value="">Barcha joylar</option>
+          <option value="cafe">Kafe</option>
+          <option value="library">Kutubxona</option>
+          <option value="coworking">Coworking</option>
+          <option value="free_zone">Bepul zona</option>
+        </select>
+        <div class="map-count" id="mapCount">Yuklanmoqda...</div>
+        <div id="mapPlaceList"><div class="loading">Yuklanmoqda...</div></div>
+      </div>
+      <div id="map"></div>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/places-data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/auth-modal.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/animations.js"></script>
+  <script>
+    let map, allPlaces = [], markers = [], markerMap = new Map();
+
+    async function initMap() {
+      allPlaces = await getPlaces();
+      map = L.map("map").setView([41.3111, 69.2797], 12);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap contributors",
+      }).addTo(map);
+
+      renderPlaces(allPlaces);
+
+      document.getElementById("typeFilter").addEventListener("change", (e) => {
+        const type = e.target.value;
+        const filtered = type ? allPlaces.filter((p) => p.type === type) : allPlaces;
+        renderPlaces(filtered);
+      });
+    }
+
+    function renderPlaces(places) {
+      markers.forEach((m) => map.removeLayer(m));
+      markers = [];
+      markerMap.clear();
+
+      document.getElementById("mapCount").textContent = `${places.length} ta joy xaritada ko'rsatilmoqda`;
+
+      const sidebar = document.getElementById("mapPlaceList");
+      sidebar.innerHTML = places.map((p) => `
+        <div class="map-place-item" data-id="${p.id}" onclick="focusPlaceById(${p.id})">
+          <strong><span class="map-type-label">${MARKER_TYPE_NAMES[p.type] || "Joy"}</span> ${p.name}</strong>
+          <div style="font-size:0.85rem;color:var(--muted);margin-top:0.25rem">
+            ${p.district} · ${p.address}<br>
+            Reyting: ${p.rating} · Wi-Fi: ${p.wifi_speed} Mbps · Narx: ${formatPrice(p.price)}
+          </div>
+          <a href="place?id=${p.id}" style="font-size:0.85rem;color:var(--primary);margin-top:0.5rem;display:inline-block">Batafsil →</a>
+        </div>
+      `).join("");
+
+      places.forEach((p) => {
+        const marker = createMapMarker(p, map, (place) => {
+          document.querySelectorAll(".map-place-item").forEach((el) => {
+            el.classList.toggle("active", Number(el.dataset.id) === place.id);
+          });
+        });
+        markers.push(marker);
+        markerMap.set(p.id, marker);
+      });
+
+      fitMapToPlaces(map, places);
+    }
+
+    function focusPlaceById(id) {
+      const marker = markerMap.get(id);
+      if (!marker) return;
+      const latlng = marker.getLatLng();
+      map.setView(latlng, 16);
+      marker.openPopup();
+      document.querySelectorAll(".map-place-item").forEach((el) => {
+        el.classList.toggle("active", Number(el.dataset.id) === id);
+      });
+    }
+
+    initMap();
+  </script>
+</body>
+</html>

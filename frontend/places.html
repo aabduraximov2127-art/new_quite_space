@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2d6a4f">
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="assets/logo-icon.png">
+  <title>Joylar — QuietSpace Tashkent</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/nav-animations.css">
+  <link rel="stylesheet" href="css/polish.css">
+</head>
+<body data-page="places">
+  <div id="navbar"></div>
+
+  <div class="container page-title">
+    <p class="section-label">Katalog</p>
+    <h1>Barcha ish joylari</h1>
+    <p style="color:var(--muted);max-width:560px">Kafe, kutubxona, coworking va bepul ish zonalarini solishtiring. Filter orqali tez toping.</p>
+  </div>
+
+  <section>
+    <div class="container">
+      <form class="filters-bar" id="filtersForm">
+        <div class="filter-group" style="flex:1;min-width:200px">
+          <label>Qidirish</label>
+          <input type="text" name="search" id="searchInput" placeholder="Joy nomi, tuman...">
+        </div>
+        <div class="filter-group">
+          <label>Turi</label>
+          <select name="type">
+            <option value="">Barchasi</option>
+            <option value="cafe">Kafe</option>
+            <option value="library">Kutubxona</option>
+            <option value="coworking">Coworking</option>
+            <option value="free_zone">Bepul zona</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Shovqin</label>
+          <select name="noise_level">
+            <option value="">Barchasi</option>
+            <option value="quiet">Tinch</option>
+            <option value="moderate">O'rtacha</option>
+            <option value="noisy">Shovqinli</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Min Wi-Fi (Mbps)</label>
+          <input type="number" name="min_wifi" min="0" placeholder="50">
+        </div>
+        <div class="filter-group">
+          <label>Max narx</label>
+          <input type="number" name="max_price" min="0" placeholder="30000">
+        </div>
+        <div class="filter-group">
+          <label>&nbsp;</label>
+          <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.9rem">
+            <input type="checkbox" name="has_sockets"> Rozetka
+          </label>
+        </div>
+        <div class="filter-group">
+          <label>&nbsp;</label>
+          <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.9rem">
+            <input type="checkbox" name="available"> Bo'sh joy bor
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary">Filter</button>
+      </form>
+
+      <div id="placesGrid" class="cards-grid loading">Yuklanmoqda...</div>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+  <script src="js/places-data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/auth-modal.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/animations.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+
+    async function loadPlaces(filters = {}) {
+      const grid = document.getElementById("placesGrid");
+      grid.innerHTML = '<div class="loading">Yuklanmoqda...</div>';
+      const places = await getPlaces(filters);
+
+      if (!places.length) {
+        grid.innerHTML = '<div class="empty-state">Joy topilmadi</div>';
+        return;
+      }
+      grid.innerHTML = places.map(placeCardHTML).join("");
+      if (typeof initDynamicCards === "function") initDynamicCards();
+    }
+
+    document.getElementById("filtersForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const filters = {};
+      if (fd.get("search")) filters.search = fd.get("search");
+      if (fd.get("type")) filters.type = fd.get("type");
+      if (fd.get("noise_level")) filters.noise_level = fd.get("noise_level");
+      if (fd.get("min_wifi")) filters.min_wifi = fd.get("min_wifi");
+      if (fd.get("max_price")) filters.max_price = fd.get("max_price");
+      if (fd.get("has_sockets")) filters.has_sockets = "true";
+      if (fd.get("available")) filters.available = "true";
+      loadPlaces(filters);
+    });
+
+    if (params.get("search")) {
+      document.getElementById("searchInput").value = params.get("search");
+      loadPlaces({ search: params.get("search") });
+    } else {
+      loadPlaces();
+    }
+  </script>
+</body>
+</html>

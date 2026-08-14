@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="QuietSpace Tashkent — Toshkentdagi haqiqiy kafe, kutubxona va coworking joylarni toping, xaritada ko'ring va oson bron qiling.">
+  <meta name="theme-color" content="#2d6a4f">
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="assets/logo-icon.png">
+  <title>QuietSpace Tashkent — Tinch ish joyi toping</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/nav-animations.css">
+  <link rel="stylesheet" href="css/polish.css">
+</head>
+<body data-page="home">
+  <div id="navbar"></div>
+
+  <header class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="hero-badge fade-up">Toshkent shahri · 12 ta tasdiqlangan joy</div>
+        <img src="assets/logo.png" alt="QuietSpace Tashkent" class="hero-logo fade-up">
+        <h1 class="fade-up">Tinch joy toping.<br>Oson bron qiling.</h1>
+        <p class="hero-lead fade-up">Kutubxona, kafe va coworking joylarini bir joyda ko'ring. Wi-Fi tezligi, shovqin darajasi va narxni solishtiring.</p>
+        <form class="search-box fade-up" onsubmit="handleHomeSearch(event)">
+          <input type="text" id="homeSearch" placeholder="Tuman yoki joy nomini yozing..." required aria-label="Qidiruv">
+          <button type="submit" class="btn btn-primary">Qidirish</button>
+        </form>
+        <div class="hero-steps fade-up">
+          <div class="hero-step"><span class="hero-step-num">1</span><span>Joy qidiring yoki xaritadan tanlang</span></div>
+          <div class="hero-step"><span class="hero-step-num">2</span><span>Shartlarini o'qing va vaqtni belgilang</span></div>
+          <div class="hero-step"><span class="hero-step-num">3</span><span>Ro'yxatdan o'tib, bronni tasdiqlang</span></div>
+        </div>
+      </div>
+      <div class="hero-card scroll-reveal">
+        <h3>Platforma haqida</h3>
+        <p class="help-text" style="margin-bottom:1rem">Ro'yxatdan o'tmasdan joylarni ko'rishingiz mumkin. Bron uchun akkaunt kerak.</p>
+        <div class="stat-row">
+          <div class="stat"><strong id="statPlaces">—</strong><span>Joylar</span></div>
+          <div class="stat"><strong>50+</strong><span>Mbps</span></div>
+          <div class="stat"><strong>4.7</strong><span>Reyting</span></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="section-places">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <p class="section-label">Eng ko'p tanlangan</p>
+          <h2>Mashhur ish joylari</h2>
+          <p class="section-desc">Foydalanuvchilar ko'p tanlaydigan kutubxona, kafe va coworkinglar</p>
+        </div>
+        <a href="places" class="btn btn-outline">Barcha joylar</a>
+      </div>
+      <div id="popularPlaces" class="cards-grid loading">Yuklanmoqda...</div>
+    </div>
+  </section>
+
+  <section class="section-nearby" style="background:var(--paper)">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <p class="section-label">Sizga yaqin</p>
+          <h2>Atrofdagi joylar</h2>
+          <p class="section-desc">Joylashuvingiz bo'yicha eng yaqin ish joylari</p>
+        </div>
+        <button type="button" class="btn btn-outline" onclick="loadNearbyPlacesSection('nearbyPlaces','nearbyStatus')">Joylashuvni aniqlash</button>
+      </div>
+      <p id="nearbyStatus" class="nearby-status">Joylashuvingiz aniqlanmoqda...</p>
+      <div id="nearbyPlaces" class="cards-grid loading">Yuklanmoqda...</div>
+    </div>
+  </section>
+
+  <section id="ai" class="section-ai">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <p class="section-label">Aqlli qidiruv</p>
+          <h2>Yordamchi xizmat</h2>
+          <p class="section-desc">Talablaringizni yozing — mos joylar tavsiya qilinadi</p>
+        </div>
+      </div>
+      <div class="ai-panel scroll-reveal">
+        <div class="ai-panel-header">
+          <img src="assets/logo-icon.png" alt="" class="ai-logo">
+          <div>
+            <h2 style="margin:0">Joy qidiruv yordamchisi</h2>
+            <p class="help-text" style="margin:0.25rem 0 0">Masalan: «Yunusobodda tinch joy, Wi-Fi tez, 30 000 so'mdan arzon»</p>
+          </div>
+        </div>
+        <p class="help-text" style="margin-top:1rem">Talablaringizni oddiy tilda yozing. Tizim mavjud joylar orasidan mosini tanlaydi.</p>
+        <form onsubmit="handleAiQuery(event)" style="display:flex;gap:0.75rem;margin-top:1rem;flex-wrap:wrap">
+          <input type="text" id="aiInput" class="form-input" placeholder="Qanday joy kerak?" required style="flex:1;min-width:200px">
+          <button type="submit" class="btn btn-primary">Tavsiya olish</button>
+        </form>
+        <div id="aiResults" class="ai-messages"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-map">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <p class="section-label">Xarita</p>
+          <h2>Toshkent xaritasi</h2>
+          <p class="section-desc">Barcha joylarni xaritada ko'ring</p>
+        </div>
+        <a href="map" class="btn btn-primary">Xaritani ochish</a>
+      </div>
+      <div id="mapPreview" style="height:300px;border-radius:14px;border:1px solid var(--border);overflow:hidden"></div>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/places-data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/auth-modal.js"></script>
+  <script src="js/ai-gemini.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/animations.js"></script>
+  <script>
+    async function loadHome() {
+      const places = await getPlaces({ ordering: "-rating" });
+      document.getElementById("statPlaces").textContent = places.length;
+      document.getElementById("popularPlaces").innerHTML = places.slice(0, 4).map(placeCardHTML).join("");
+      if (typeof initDynamicCards === "function") initDynamicCards();
+      loadNearbyPlacesSection("nearbyPlaces", "nearbyStatus");
+
+      const mapEl = document.getElementById("mapPreview");
+      const map = L.map(mapEl).setView([41.3111, 69.2797], 11);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap",
+      }).addTo(map);
+      places.forEach((p) => createMapMarker(p, map));
+      fitMapToPlaces(map, places);
+      setTimeout(() => map.invalidateSize(), 200);
+    }
+
+    function handleHomeSearch(e) {
+      e.preventDefault();
+      const q = document.getElementById("homeSearch").value;
+      location.href = `places?search=${encodeURIComponent(q)}`;
+    }
+
+    async function handleAiQuery(e) {
+      e.preventDefault();
+      const input = document.getElementById("aiInput");
+      const query = input.value.trim();
+      const box = document.getElementById("aiResults");
+      box.innerHTML += `<div class="ai-msg user">${query}</div>`;
+      input.value = "";
+      box.innerHTML += `<div class="ai-msg bot ai-thinking" id="aiThinking">Tavsiyalar tayyorlanmoqda, kuting...</div>`;
+      box.scrollTop = box.scrollHeight;
+
+      const result = await aiRecommend(query);
+      document.getElementById("aiThinking")?.remove();
+
+      const recs = result.items || [];
+      let html = `<div class="ai-msg bot">`;
+      if (result.source) html += `<small style="color:var(--muted);display:block;margin-bottom:0.5rem">Manba: ${result.source}</small>`;
+      if (result.message) html += `<p style="margin-bottom:0.75rem">${result.message}</p>`;
+      html += `<strong>Tavsiyalar (${recs.length}):</strong>`;
+      if (!recs.length) {
+        html += `<p style="margin-top:0.5rem;color:var(--muted)">Mos joy topilmadi. Boshqa so'rov bilan urinib ko'ring.</p>`;
+      }
+      recs.forEach((r) => {
+        const p = r.place;
+        html += `<div class="ai-recommendation">
+          <strong>${p.name}</strong> — Reyting: ${p.rating} · Wi-Fi: ${p.wifi_speed} Mbps · ${formatPrice(p.price)}
+          <br><small>${(r.reasons || []).join(" · ")}</small>
+          <br><a href="place?id=${p.id}">Batafsil →</a>
+          <button type="button" class="btn btn-primary btn-sm" style="margin-top:0.5rem" onclick="openQuickBook(${p.id})">Bron qilish</button>
+        </div>`;
+      });
+      html += "</div>";
+      box.innerHTML += html;
+      box.scrollTop = box.scrollHeight;
+    }
+
+    loadHome();
+  </script>
+</body>
+</html>
